@@ -1,0 +1,35 @@
+# General Settings
+MODE: "DEV" # DEV | PROD
+
+# Knowledge Graph Settings
+QUICK_LAYER_HOURS: 48
+GRAPH_STORAGE_PATH: "./data/graph.json"
+
+# Neo4j Settings (Optional Streaming)
+NEO4J:
+  ENABLED: True
+  URI: "bolt://localhost:7687"
+  AUTH: ["neo4j", "chedi123"] # Change this to your actual password
+
+# Model Settings (Local <4B)
+LLM_BACKEND: "ollama"
+LLM_MODEL: "phi3:mini"
+LLM_BASE_URL: "http://localhost:11434/api/generate"
+LLM_CONTEXT_SIZE: 4096
+
+# Ingestor Settings (Windows Listeners)
+SCREENSHOT:
+  ENABLED: True
+  INTERVAL_SECONDS: 5
+  SAVE_PATH: "./data/screenshots"
+
+AUDIO:
+  ENABLED: True
+  SAMPLE_RATE: 16000
+  CHANNELS: 1
+  CHUNK_SIZE: 1024
+  VAD_SENSITIVITY: 3 # Voice Activity Detection level
+
+CALENDAR:
+  ENABLED: True
+  SOURCE: "Outlook" # or "ICS"

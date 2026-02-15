@@ -1,0 +1,18 @@
+pywin32
+mss
+# Core dependencies
+pyaudio
+mss
+pywin32
+networkx
+pyyaml
+requests
+
+# OCR - pytesseract (requires tesseract binary installation)
+pytesseract
+Pillow
+
+# STT - faster-whisper (optimized Whisper implementation)
+faster-whisper
+
+neo4j>=5.0.0

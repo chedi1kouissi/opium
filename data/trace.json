@@ -1,0 +1,234 @@
+[
+  {
+    "timestamp": "2026-02-15T07:26:43.875926",
+    "agent": "Normalizer",
+    "action": "Normalized",
+    "details": {
+      "event_type": "CALENDAR",
+      "primary_entity": "Q1 Product Launch Planning Meeting",
+      "entities": {
+        "people": [
+          "Sarah Chen",
+          "Marcus Johnson",
+          "Lisa Park",
+          "David Kim"
+        ],
+        "organizations": [],
+        "projects": [
+          "CloudSync Pro v2.0"
+        ],
+        "locations": [
+          "Conference Room B - Building A"
+        ],
+        "technologies": [],
+        "documents": [],
+        "dates": [
+          "2026-02-15",
+          "Monday 9:00 AM - 10:30 AM",
+          "March 10",
+          "March 29th"
+        ],
+        "amounts": [
+          "$45,000 for Q1 marketing"
+        ],
+        "urls": [],
+        "other": []
+      },
+      "content_summary": "Meeting to finalize the launch of CloudSync Pro v2.0 with key discussions on timeline, feature freeze deadline, and budget.",
+      "sentiment": "neutral",
+      "action_items": [
+        "Come prepared with your team's status updates."
+      ],
+      "deep_metadata": {
+        "raw_text": "Subject: Product Launch Planning Meeting\nAttendees: Sarah Chen (Product Manager), Marcus Johnson (Engineering Lead), Lisa Park (Marketing Director), David Kim (CEO)\nTime: Monday 9:00 AM - 10:30 AM\nLocation: Conference Room B - Building A\nAgenda:\n1. Review launch timeline for CloudSync Pro v2.0\n2. Discuss feature freeze deadline (March 10)\n3. Marketing campaign coordination\n4. Beta user feedback analysis\n5. Final budget approval: $45,000 for Q1 marketing\n\nNotes: This is our final pre-launch sync before the March 29th release. Please come prepared with your team's status updates.",
+        "confidence": "high"
+      },
+      "context_tags": [
+        "Work",
+        "Product Development"
+      ]
+    }
+  },
+  {
+    "timestamp": "2026-02-15T07:27:06.542012",
+    "agent": "Normalizer",
+    "action": "Normalized",
+    "details": {
+      "event_type": "Email",
+      "primary_entity": "Q1 Product Launch Bottlenecks",
+      "entities": {
+        "people": [
+          "Jennifer Wu",
+          "Tom Baker"
+        ],
+        "organizations": [],
+        "projects": [],
+        "locations": [],
+        "technologies": [
+          "load testing",
+          "Redis caching",
+          "composite database indexes",
+          "product recommendations system"
+        ],
+        "documents": [],
+        "dates": [
+          "2026-02-15 12:15 PM",
+          "Monday 12:15 PM",
+          "launch delay until March 29th (2-week extension)"
+        ],
+        "amounts": [],
+        "urls": [],
+        "other": [
+          "API response times exceed 2 seconds with 1,000 concurrent users"
+        ]
+      },
+      "content_summary": "Marcus identifies performance bottlenecks that could impact the Q1 Product Launch timeline.",
+      "sentiment": "negative",
+      "action_items": [
+        "Schedule a call to discuss delaying the launch and optimization plans."
+      ],
+      "deep_metadata": {
+        "raw_text": "From: Marcus Johnson <marcus.johnson@cloudsync.io>\nTo: Sarah Chen <sarah.chen@cloudsync.io>\nSubject: RE: Launch Timeline - Critical Performance Issues\nDate: Monday 12:15 PM\n\nHi Sarah,\n\nAfter our meeting this morning, I sat down with Jennifer Wu and Tom Baker from my engineering team. We ran load tests on the staging environment and discovered some concerning performance bottlenecks.\n\n**Key Findings:**\n- API response times exceed 2 seconds with 1,000 concurrent users\n- Database queries on the /api/products endpoint averaging 1,240ms (target: 300ms)\n- Critical slow query: SELECT * FROM orders JOIN users... taking 1.8 seconds\n\n**My Recommendation:**\nI strongly suggest we delay the launch from March 15th to March 29th (2-week extension). This gives us time to:\n\n1. Implement Redis caching for frequently accessed endpoints\n2. Add composite database indexes on orders table\n3. Optimize the N+1 query problem in product recommendations\n4. Run comprehensive load testing with 5,000 concurrent users\n\nI know this impacts marketing's timeline, but launching with poor performance could damage our reputation and user retention. Can we schedule a call this afternoon to discuss?\n\nBest regards,\nMarcus Johnson\nEngineering Lead, CloudSync",
+        "confidence": "high"
+      },
+      "context_tags": [
+        "Work"
+      ]
+    }
+  },
+  {
+    "timestamp": "2026-02-15T07:27:23.339469",
+    "agent": "Normalizer",
+    "action": "Normalized",
+    "details": {
+      "event_type": "",
+      "primary_entity": "",
+      "entities": {},
+      "content_summary": "",
+      "sentiment": "",
+      "action_items": [],
+      "deep_metadata": {
+        "raw_text": "Performance Dashboard - CloudSync Staging Environment\n\n=== API Response Times (Last 24 Hours) ===\n\nEndpoint                    Avg Response    Target      Status\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n/api/users                  850ms           200ms       \u26a0\ufe0f Warning\n/api/products               1,240ms         300ms       \ud83d\udd34 Critical\n/api/orders                 2,100ms         500ms       \ud83d\udd34 Critical\n/api/auth/login             180ms           150ms       \u2705 Good\n/api/dashboard/stats        3,400ms         800ms       \ud83d\udd34 Critical\n\n=== Database Query Analysis ===\n\nSlow Query Detected:\nSELECT * FROM orders \nJOIN users ON orders.user_id = users.id \nWHERE orders.created_at > '2024-01-01' \nORDER BY created_at DESC\nExecution Time: 1,847ms\n\nRecommended Fix:\n- Add composite index: idx_orders_user_created (user_id, created_at, status)\n- Implement eager loading for user data\n- Cache result set in Redis (TTL: 5 minutes)\n\n=== N+1 Query Problem ===\nDetected in: ProductRecommendationsService\nIssue: Loading product variants in loop (342 additional queries)\nFix: Use SELECT with JOIN or eager loading\n\n=== Memory Usage ===\nCurrent: 78% of 16GB\nPeak: 92% at 11:23 AM\nRecommendation: Upgrade to 32GB or optimize caching strategy",
+        "confidence": "",
+        "file_path": "Performance Dashboard - CloudSync Staging Environment\n\n=== API Response Times (Last 24 Hours) ===\n\nEndpoint                    Avg Response    Target      Status\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n/api/users                  850ms           200ms       \u26a0\ufe0f Warning\n/api/products               1,240ms         300ms       \ud83d\udd34 Critical\n/api/orders                 2,100ms         500ms       \ud83d\udd34 Critical\n/api/auth/login             180ms           150ms       \u2705 Good\n/api/dashboard/stats        3,400ms         800ms       \ud83d\udd34 Critical\n\n=== Database Query Analysis ===\n\nSlow Query Detected:\nSELECT * FROM orders \nJOIN users ON orders.user_id = users.id \nWHERE orders.created_at > '2024-01-01' \nORDER BY created_at DESC\nExecution Time: 1,847ms\n\nRecommended Fix:\n- Add composite index: idx_orders_user_created (user_id, created_at, status)\n- Implement eager loading for user data\n- Cache result set in Redis (TTL: 5 minutes)\n\n=== N+1 Query Problem ===\nDetected in: ProductRecommendationsService\nIssue: Loading product variants in loop (342 additional queries)\nFix: Use SELECT with JOIN or eager loading\n\n=== Memory Usage ===\nCurrent: 78% of 16GB\nPeak: 92% at 11:23 AM\nRecommendation: Upgrade to 32GB or optimize caching strategy"
+      },
+      "context_tags": []
+    }
+  },
+  {
+    "timestamp": "2026-02-15T07:27:53.097924",
+    "agent": "Normalizer",
+    "action": "Normalized",
+    "details": {
+      "event_type": "Email",
+      "primary_entity": "Q1 Product Launch Delay Decision",
+      "entities": {
+        "people": [
+          "Marcus's team",
+          "Lisa",
+          "David Kim",
+          "Jennifer Wu"
+        ],
+        "organizations": [],
+        "projects": [
+          "Project Alpha",
+          "Q4 Initiative"
+        ],
+        "locations": [],
+        "technologies": [
+          "Redis caching",
+          "Python",
+          "PostgreSQL",
+          "React",
+          "microphone_vad"
+        ],
+        "documents": [
+          "roadmap in JIRA",
+          "Proposal_v3.pdf"
+        ],
+        "dates": [
+          "2026-02-15 12:25:46.155398",
+          "March 15th",
+          "March 29th",
+          "tomorrow"
+        ],
+        "amounts": [],
+        "urls": [
+          "https://example.com/resource"
+        ],
+        "other": []
+      },
+      "content_summary": "Decision to delay product launch due to API performance issues, with action items for roadmap update and stakeholder communication.",
+      "sentiment": "neutral",
+      "action_items": [
+        "Update the project roadmap in JIRA",
+        "Send email to all stakeholders explaining delay reasons",
+        "Schedule a call with CEO David Kim"
+      ],
+      "deep_metadata": {
+        "raw_text": "Okay, I need to document this decision carefully. We're pushing the launch date from March 15th to March 29th - that's a two-week delay. The main blocker is API performance. Marcus's team needs time to implement Redis caching and fix those slow database queries we saw in  the performance dashboard. I should update the roadmap in JIRA right now, move all the launch-related tickets to the new sprint. Then I need to send an email to all stakeholders explaining the delay and the technical reasons. Lisa will need to adjust the marketing campaign timeline, but actually this could work in our favor because we'll have more beta user feedback to incorporate. I also need to schedule that urgent call with David Kim, our CEO, to explain why we're delaying and present the risk mitigation plan. Tomorrow I should sync with Jennifer Wu about the database optimization work.",
+        "confidence": "high",
+        "file_path": "Okay, I need to document this decision carefully. We're pushing the launch date from March 15th to March 29th - that's a two-week delay. The main blocker is API performance. Marcus's team needs time to implement Redis caching and fix those slow database queries we saw in  the performance dashboard. I should update the roadmap in JIRA right now, move all the launch-related tickets to the new sprint. Then I need to send an email to all stakeholders explaining the delay and the technical reasons. Lisa will need to adjust the marketing campaign timeline, but actually this could work in our favor because we'll have more beta user feedback to incorporate. I also need to schedule that urgent call with David Kim, our CEO, to explain why we're delaying and present the risk mitigation plan. Tomorrow I should sync with Jennifer Wu about the database optimization work."
+      },
+      "context_tags": [
+        "Work",
+        "Technology"
+      ]
+    }
+  },
+  {
+    "timestamp": "2026-02-15T07:28:14.050689",
+    "agent": "Normalizer",
+    "action": "Normalized",
+    "details": {
+      "event_type": "Meeting",
+      "primary_entity": "CloudSync Pro v2.0 Launch Update",
+      "entities": {
+        "people": [
+          "David Kim",
+          "Sarah Chen"
+        ],
+        "organizations": [],
+        "projects": [
+          "CloudSync Pro v2 end"
+        ],
+        "locations": [
+          "Zoom Meeting"
+        ],
+        "technologies": [],
+        "documents": [],
+        "dates": [
+          "2026-03-15",
+          "Monday 4:00 PM - 4:30 PM"
+        ],
+        "amounts": [
+          "$45,000"
+        ],
+        "urls": [],
+        "other": []
+      },
+      "content_summary": "Discussion and decision on CloudSync Pro v2.0 launch date change due to technical issues.",
+      "sentiment": "neutral",
+      "action_items": [
+        "Communicate delay transparently with beta users"
+      ],
+      "deep_metadata": {
+        "raw_text": "Subject: [URGENT] CEO Sync - Launch Date Change\nAttendees: Sarah Chen, David Kim (CEO)\nTime: Monday 4:00 PM - 4:30 PM\nLocation: Zoom Meeting\nAgenda: Discuss technical blockers, revised timeline, and risk mitigation for CloudSync Pro v2.0 launch\n\nMeeting Notes:\n- Explained performance issues discovered in load testing\n- David approved 2-week delay to March 29th\n- Budget remains at $45,000 for marketing\n- Need to communicate transparently with beta users\n- Will monitor engineering team's progress weekly",
+        "confidence": "high"
+      },
+      "context_tags": [
+        "Work"
+      ]
+    }
+  },
+  {
+    "timestamp": "2026-02-15T07:28:46.092501",
+    "agent": "Normalizer",
+    "action": "Normalized",
+    "details": {
+      "deep_metadata": {
+        "raw_text": "From: Sarah Chen <sarah.chen@cloudsync.io>\nTo: All Stakeholders <stakeholders@cloudsync.io>\nCC: Marcus Johnson, Lisa Park, Jennifer Wu, Tom Baker\nSubject: CloudSync Pro v2.0 Launch Update - Timeline Adjustment\nDate: Monday 5:30 PM\n\nDear Team and Stakeholders,\n\nI want to provide you with an important update regarding our CloudSync Pro v2.0 product launch.\n\n**NEW LAUNCH DATE: March 29, 2024** (previously March 15, 2024)\n\n**Reason for Timeline Adjustment:**\nDuring final load testing this week, our engineering team identified critical performance bottlenecks that could significantly impact user experience:\n\n\u2022 API response times exceeding targets under realistic traffic loads (1,000+ concurrent users)\n\u2022 Database query optimization needed for core features\n\u2022 Caching infrastructure gaps\n\n**What We're Doing:**\nMarcus Johnson's engineering team will implement:\n1. Redis caching layer for high-traffic API endpoints (targeting 70% faster response times)\n2. Database index optimization for orders and products tables\n3. Enhanced load balancing configuration\n4. Comprehensive performance testing with 5,000 concurrent users\n\n**Positive Impacts:**\n\u2705 Extended beta testing period = more user feedback incorporated\n\u2705 Marketing team has additional time to refine campaign materials\n\u2705 Engineering team can deliver truly production-ready performance\n\u2705 Reduced risk of negative reviews due to slow performance\n\n**Budget:**\nNo change - marketing budget remains at $45,000\n\n**Stakeholder Communication:**\nLisa Park's team will notify our beta users this week, positioning the delay as our commitment to quality.\n\nI'm confident this is the right decision for CloudSync and our users. Launching a high-quality, performant product is more valuable than hitting an arbitrary date.\n\nQuestions? I'm available all week.\n\nBest regards,\nSarah Chen\nProduct Manager, CloudSync"
+      }
+    }
+  }
+]

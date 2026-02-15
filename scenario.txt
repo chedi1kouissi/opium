@@ -1,0 +1,72 @@
+The "Golden Demo" Event Set
+To showcase the "Whole Life" interlinking, implement these specific events:
+
+Calendar Event (The Anchor):
+
+Data: A meeting titled "Project X Sync" with "Person A."
+
+
+Why: It provides a temporal and social anchor for everything else that happens during that time.
+
+Meeting Audio / Transcript (The Context):
+
+Data: A 30-second audio clip of you saying, "I'll save the budget details from this website now."
+
+Why: It captures intent. Your Ingestor Agent (Agent A) converts this to text.
++1
+
+Web Research (The Detail):
+
+Data: A browser history event for a URL containing "Project X Budget."
+
+
+Why: It shows the system observing activity and linking it to the "Topic" mentioned in the audio.
++2
+
+Screenshot / OCR (The Evidence):
+
+Data: A screenshot of a spreadsheet or a graph taken 10 seconds after the audio.
+
+
+Why: This is the "multimodal" heavy lifter. The Linker Agent (Agent C) sees the "Project X" text in the image and links it to the Calendar event and the Audio.
++1
+
+Follow-up Email (The Social Graph):
+
+Data: An email from "Person A" saying, "Send me that budget screenshot."
+
+Why: It completes the loop. When the user asks the Assistant, "Where is the file Person A wants?", the system traverses: Person A -> Email -> Project X -> Screenshot.
++1
+
+2. The Normalizer Schema (Agent B Target)
+To make your Linker Agent (Agent C) reliable on a <4B model, use this strict, flat JSON schema for all the events above. This ensures the model doesn't get "lost" in complex nesting.
+
+JSON
+
+{
+  "event_type": "CALENDAR | AUDIO | WEB | SCREENSHOT | EMAIL",
+  "id": "UUID",
+  "timestamp": "ISO-8601",
+  "primary_entity": "Project X",
+  "involved_people": ["Person A"],
+  "content_summary": "Brief gist for the Quick KG",
+  "deep_metadata": {
+    "ocr_text": "extracted text if any",
+    "transcript": "extracted text if any",
+    "url": "if applicable"
+  },
+  "context_tags": ["Work", "Finance"],
+  "session_id": "ST_2024_01_01_10" 
+}
+Pro-Tip for the Linker: Use that session_id. If two events happen within the same 30-minute block, the Linker should automatically create a [:HAPPENED_WITH] relation. This is the easiest way to find "hidden" context when explicit keywords are missing.
+
+3. Visualizing the "Winning Card"
+4. Implementation Priorities for the next 4 hours:
+Agent A (Ingestor): Focus on Screenshots (OCR) and Text (Emails/Web) first. They are the easiest to link via keywords.
+
+
+Agent B (Normalizer): Spend 30 minutes fine-tuning the prompt for your <4B model to ensure it always returns the JSON schema above without extra conversational "fluff".
+
+Agent C (Linker): Write a simple Python function that checks: "Does this new node share a Project Name or a Person with any node from the last hour?" If yes, CREATE RELATION.
+
+Ready to dive into the Antigravity code for the Ingestor? Tell me which modality you want to tackle first, and I'll help you structure the listener.
