@@ -114,6 +114,92 @@ class GraphStorage:
                     continue
         return context_nodes
 
+    def search_nodes(self, query_terms):
+        """
+        Fuzzy search for nodes matching query terms.
+        Returns list of (node_id, data, score).
+        """
+        results = []
+        query_terms = [t.lower() for t in query_terms if len(t) > 2] # Filter short words
+        if not query_terms:
+            return []
+            
+        for node, data in self.graph.nodes(data=True):
+            score = 0
+            # Search in ID (Name is usually in ID for entities)
+            node_str = str(node).lower()
+            
+            # Search in specific attributes
+            content_str = (
+                str(data.get('summary', '')) + " " + 
+                str(data.get('primary_entity', '')) + " " + 
+                str(data.get('event_type', ''))
+            ).lower()
+            
+            for term in query_terms:
+                if term in node_str:
+                    score += 3 # ID match is strong
+                if term in content_str:
+                    score += 1 # Content match
+            
+            if score > 0:
+                results.append((node, data, score))
+        
+        # Sort by score desc
+        results.sort(key=lambda x: x[2], reverse=True)
+        return results
+
+    def get_traversal(self, start_node_ids, depth=1):
+        """
+        Returns a subgraph (nodes and edges) starting from start_node_ids.
+        """
+        visited = set(start_node_ids)
+        queue = [(n, 0) for n in start_node_ids]
+        subgraph_nodes = {}
+        subgraph_edges = []
+        
+        # BFS Traversal
+        while queue:
+            current_node, current_depth = queue.pop(0)
+            
+            if current_node not in self.graph:
+                continue
+                
+            # Add current node data
+            subgraph_nodes[current_node] = self.graph.nodes[current_node]
+            
+            if current_depth >= depth:
+                continue
+                
+            # Get neighbors
+            # Outgoing
+            for neighbor in self.graph.successors(current_node):
+                edge_data = self.graph.get_edge_data(current_node, neighbor)
+                subgraph_edges.append({
+                    "source": current_node,
+                    "target": neighbor,
+                    "relation": edge_data.get("relation", "RELATED")
+                })
+                
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    queue.append((neighbor, current_depth + 1))
+                    
+            # Incoming (Important for "What caused X?")
+            for predecessor in self.graph.predecessors(current_node):
+                edge_data = self.graph.get_edge_data(predecessor, current_node)
+                subgraph_edges.append({
+                    "source": predecessor,
+                    "target": current_node,
+                    "relation": edge_data.get("relation", "RELATED")
+                })
+                
+                if predecessor not in visited:
+                    visited.add(predecessor)
+                    queue.append((predecessor, current_depth + 1))
+                    
+        return {"nodes": subgraph_nodes, "edges": subgraph_edges}
+
     def _load(self):
         if os.path.exists(self.storage_path):
             try:
