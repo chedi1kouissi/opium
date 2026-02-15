@@ -1,62 +1,104 @@
-# MemoraOS: Digital Nervous System
+# 🧠 MemoraOS: Your Private Digital Nervous System
 
-MemoraOS is a local, privacy-first **Digital Nervous System** that captures your "Whole Life" context (Audio, Screen, Email, Calendar) and converts it into an interlinked **Knowledge Graph**.
+> "Stop searching. Start remembering."
 
-## 🧠 Architecture "Winning Cards"
-1.  **Dual-Layer Graph**: 'Quick' layer for recent context (<48h) + 'Core' layer for long-term memory.
-2.  **Hidden Context**: Multi-agent pipeline allowing "Time" and "Entity" based linking.
-3.  **<4B Constraints**: Designed to run on small open-source models (Phi-3, TinyLlama).
-4.  **Windows Native**: deeply integrated with Outlook and Windows Audio/Screen subsystems.
+**MemoraOS** is an intelligent layer for your computer that connects your fragmented digital life (Emails, Meetings, Chats, Screen context) into a single, searchable **Knowledge Graph**. 
+
+It runs **100% locally** on your machine, ensuring your data never leaves your control.
+
+---
+
+## 🌟 Why MemoraOS? (The Value Add)
+
+### 1. The Problem: "Digital Amnesia"
+You have a meeting about "Project Alpha". You receive an email about "Budget constraints". You see a Slack message about a "Delay". 
+**These events are connected, but your computer doesn't know that.** They live in separate apps, and you have to manually connect the dots in your brain.
+
+### 2. The Solution: "The Winning Card" (Knowledge Graph)
+MemoraOS acts as a **Digital Nervous System**. It watches what you do, understands the context, and **automatically connects the dots**.
+*   It knows the "Budget" email *caused* the "Delay".
+*   It knows "Sarah" attended the "Project Alpha" meeting.
+*   **It builds a web of memories (a Graph) instead of a list of files.**
+
+### 3. Privacy First
+*   **No Cloud**: No data is sent to OpenAI, Google, or Microsoft.
+*   **Local AI**: Uses your own computer's power (Ollama + 4B models) to read and think.
+*   **Local Storage**: Your memory lives on your hard drive (`graph.json` / Neo4j).
+
+---
+
+## 🏗️ How It Works (The Architecture)
+
+Think of MemoraOS as a team of 4 specialized AI Agents working for you 24/7:
+
+### 1. The Senses (Perception Layer)
+Just like you have eyes and ears, MemoraOS has "Listeners":
+*   **👀 Eye (OCR)**: Reads text from your screen every few seconds.
+*   **👂 Ear (STT)**: Listens to your microphone during meetings.
+*   **📅 Calendar**: Checks your Outlook/Google schedule.
+*   **📧 Email**: Reads incoming messages.
+
+### 2. The Lens (Normalizer Agent)
+Raw data is messy. This agent cleans it up.
+*   *Input*: "Uhh, so yeah, let's delay the launch." (Audio)
+*   *Output*: `{ "topic": "Launch Delay", "who": "User", "action": "Decision" }`
+
+### 3. The Brain (Linker Agent)
+This is where the magic happens. It looks for connections in your past.
+*   *"Wait, this 'Launch Delay' email is related to the 'Budget Meeting' from Monday!"*
+*   It creates a **Semantic Link**: `(Email)-[CAUSED_BY]->(Meeting)`
+
+### 4. The Analyst (Reflect Agent)
+You can ask questions to your memory.
+*   *You*: "Why was the launch delayed?"
+*   *Analyst*: "The launch was delayed due to API performance issues identified by Marcus's team on Monday." (It traverses the graph to find the answer).
+
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Python 3.10+
-- **Windows OS** (required for `pywin32`, `mss`, `pyaudio`)
-- Outlook (optional, for Calendar/Email listeners)
-- [FFmpeg](https://ffmpeg.org/download.html) (required for Audio processing if you expand features)
+1.  **Python 3.10+**
+2.  **Ollama**: Install from [ollama.com](https://ollama.com) and run `ollama run phi3:mini`.
+3.  **Neo4j** (Optional): For 3D visualization.
 
 ### Installation
-
-1.  **Install Dependencies**:
-    ```bash
-    pip install -r memora_os/requirements.txt
-    ```
-
-2.  **Configuration**:
-    Edit `memora_os/config/settings.yaml` to adjust listening intervals or toggle specific "Senses".
-
-### Running the System
-To activate the "Digital Nervous System", run the main entry point. This will start the background listeners.
-
-```bash
-python memora_os/main.py
+```powershell
+# 1. Clone & Install
+pip install -r requirements.txt
 ```
 
-## 🧪 Testing the Listeners
+### Usage
+**1. Run the System (The Listeners)**
+This starts the background agents.
+```powershell
+python main.py
+```
 
-Once `main.py` is running, you will see logs indicating "Senses" are active.
+**2. Test with a Scenario**
+Simulate a week of life (Emails, Meetings) to populate the graph immediately.
+```powershell
+python scenario_realistic.py
+```
 
-1.  **Audio**: Speak into your microphone. If you speak for >1s, the `[Ear]` will trigger and save a `.wav` file to `data/audio`.
-2.  **Screenshot**: Wait 10-30 seconds (configured in settings). The `[Eye]` will capture a `.png` to `data/screenshots`.
-3.  **Outlook**: If you have a calendar event or email with "Project X" in the subject/body, the `[Calendar]` and `[Email]` listeners will pick it up.
+**3. Chat with your Memory**
+Ask questions about what happened.
+```powershell
+python query.py
+```
 
-## 🔄 Data Flow (Next Steps)
+**4. Visualize (Neo4j)**
+Open `http://localhost:7474` to see your beautiful Knowledge Graph web.
 
-Currently, the system is in **Phase 1 (Ingestion)**.
+---
 
-**Current Flow:**
-`Reality` -> `Listeners (mss/pyaudio/win32)` -> `Event Queue` -> `Print to Console`
+## 🛠️ Technical Highlights
 
-**Next Phase (Normalization & Linking):**
-We will implement the **Normalizer Agent** to take these events from the Queue and pass them to a local LLM.
+*   **GraphRAG**: Retrieval Augmented Generation using Graph traversal + Vector search.
+*   **Dual-Write Storage**: Saves to `JSON` (simple) and `Neo4j` (powerful) simultaneously.
+*   **Small Language Models (SLM)**: Optimized for `phi3:mini` (3.8B implementation) for low latency on consumer hardware.
+*   **Modular Pipeline**: Easily plug in new Listeners (e.g., Slack, Discord) or Linkers.
 
-**Target Flow:**
-`Event Queue` -> **`Normalizer Agent`** (LLM) -> `Structured JSON` -> **`Linker Agent`** -> `Knowledge Graph`
+---
 
-## Directory Structure
-- `core/`: Core data structures (`Event` class).
-- `pipeline/ingestors/`: The Listeners (Audio, Screen, Email, Calendar).
-- `pipeline/normalizers/`: (Coming Soon) LLM-based data cleaning.
-- `pipeline/linkers/`: (Coming Soon) Graph relation logic.
-- `config/`: Settings and Prompts.
+*"Your Life, Connected."*
