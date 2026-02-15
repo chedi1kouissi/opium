@@ -50,25 +50,47 @@ class ReflectAgent:
         """
         Uses LLM to extract key entities/topics from query.
         """
+        # Optimized prompt for phi3:mini
         prompt = f"""
-        Extract the most important search terms (entities, concepts, names) from this user query.
-        Output as a JSON lists of strings.
-        
+        Analyze this query and extract key search terms.
         Query: "{query}"
         
-        Example:
-        Query: "Why was the Apollo launch delayed?"
-        Response: {{"terms": ["Apollo", "launch", "delayed"]}}
+        Return a JSON object with a single key "terms" containing a list of strings.
+        EXTRACT: People, Projects, Technologies, key concepts.
+        IMPORTANT: Split compound terms (e.g., "technical blockers" -> "technical", "blockers").
         
-        Response VALID JSON ONLY:
+        Example:
+        {{"terms": ["Marcus Johnson", "launch", "delay", "API"]}}
+        
+        JSON ONLY. NO MARKDOWN. NO TEXT.
         """
+        
+        terms = []
         try:
             response = self.llm.generate(prompt, json_mode=True)
+            # Cleanup potential markdown code blocks
+            if "```json" in response:
+                response = response.split("```json")[1].split("```")[0]
+            elif "```" in response:
+                response = response.split("```")[1].split("```")[0]
+            
             data = json.loads(response)
-            return data.get("terms", [])
-        except:
-             # Fallback: Simple split
-             return [w for w in query.split() if len(w) > 3]
+            terms = data.get("terms", [])
+            # CLEANUP: Filter None and non-strings
+            terms = [t for t in terms if isinstance(t, str) and t.strip()]
+        except Exception as e:
+            print(f"[Reflect] Extraction error: {e}")
+        
+        # STRONG Fallback: If LLM fails or returns empty, rule-based extraction
+        if not terms:
+            print("[Reflect] Using fallback extraction.")
+            # Remove common stopwords
+            stopwords = {"what", "where", "when", "who", "why", "how", "is", "are", "the", "a", "an", "in", "on", "at", "for", "to", "of", "about"}
+            words = query.replace("?", "").replace(".", "").split()
+            # Keep capitalized words (names) and long words
+            terms = [w for w in words if w.lower() not in stopwords and (len(w) > 3 or w[0].isupper())]
+            
+        return terms
 
     def _format_context(self, subgraph):
         """

@@ -33,3 +33,9 @@ AUDIO:
 CALENDAR:
   ENABLED: True
   SOURCE: "Outlook" # or "ICS"
+
+# Telegram Bot Settings
+TELEGRAM:
+  ENABLED: False
+  BOT_TOKEN: "YOUR_TELEGRAM_BOT_TOKEN"
+  ALLOWED_USER_ID: 000000000 # Set your Telegram User ID here for security

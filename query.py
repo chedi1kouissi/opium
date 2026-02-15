@@ -1,9 +1,10 @@
 import sys
 import os
 
-# Setup Path to include project root
+# Setup Path to include project root (parent of memora_os)
 current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(current_dir)
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
 
 from memora_os.pipeline.reflect.agent import ReflectAgent
 import time

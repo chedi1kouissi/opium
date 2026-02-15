@@ -16,3 +16,4 @@ Pillow
 faster-whisper
 
 neo4j>=5.0.0
+python-telegram-bot

@@ -120,8 +120,18 @@ class GraphStorage:
         Returns list of (node_id, data, score).
         """
         results = []
-        query_terms = [t.lower() for t in query_terms if len(t) > 2] # Filter short words
-        if not query_terms:
+        
+        # Normalize and filter query terms
+        # Split multi-word terms (e.g., "technical blockers" -> "technical", "blockers")
+        expanded_terms = []
+        for t in query_terms:
+            if isinstance(t, str):
+                expanded_terms.extend(t.lower().split())
+        
+        # Filter short words
+        search_tokens = [t for t in expanded_terms if len(t) > 2]
+        
+        if not search_tokens:
             return []
             
         for node, data in self.graph.nodes(data=True):
@@ -133,14 +143,18 @@ class GraphStorage:
             content_str = (
                 str(data.get('summary', '')) + " " + 
                 str(data.get('primary_entity', '')) + " " + 
-                str(data.get('event_type', ''))
+                str(data.get('event_type', '')) + " " +
+                str(data.get('name', '')) + " " + 
+                str(data.get('label', ''))
             ).lower()
             
-            for term in query_terms:
+            for term in search_tokens:
+                term_score = 0
                 if term in node_str:
-                    score += 3 # ID match is strong
+                    term_score += 3
                 if term in content_str:
-                    score += 1 # Content match
+                    term_score += 1
+                score += term_score
             
             if score > 0:
                 results.append((node, data, score))
